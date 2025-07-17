@@ -71,15 +71,70 @@ def bubble_sort(movies):
             if float(movies[j][1]) > float(movies[j+1][1]):
                 movies[j], movies[j+1] = movies[j+1], movies[j]
     
-    for title, rating in movies:
-        print(f"{title} - {float(rating)}")
+    return movies
+    # for title, rating in movies:
+    #     print(f"{title} - {float(rating)}")
+
+
+def binary_search(movies, target_rating=6.0):
+    """
+    (四) 二分搜索
+    在此阶段，您需要实施二分搜索算法并打印评分为 6 的电影。
+
+    要完成此阶段，您的程序应执行以下操作：
+    1. 以排序后的数据收集为例，添加以下变量：low = 0 和 high = n - 1，
+    其中 n 是集合中的元素数，用于存储第一个和最后一个元素的索引;
+    2. 检查集合中 middle 元素的评级。如果等于 6，则打印电影标题和其他标题;
+    3. 如果评分小于 6，则设置低 = 中 + 1。它应该在每次迭代中完成;
+    4. 如果评级大于 6，则设置高 = 中 - 1。从步骤 2 开始重复该过程。
+
+    示例 1：
+    Hercules - 6.0
+    The Fast and the Furious: Tokyo Drift - 6.0
+    Finding You - 6.0
+    """
+    low = 0
+    high = len(movies) - 1
+    found = False  # 标记是否找到至少一个目标评分
+    
+    while low <= high:
+        mid = (low + high) // 2
+        mid_rating = float(movies[mid][1])
+        
+        if mid_rating == target_rating:
+            found = True
+            # 向左找到评分相同的第一个位置（左边界）
+            left_index = mid
+            while left_index >= 0 and float(movies[left_index][1]) == target_rating:
+                left_index -= 1
+            left_index += 1  # 回到第一个等于目标评分的索引
+            
+            # 向右找到评分相同的最后一个位置（右边界）
+            right_index = mid
+            while right_index < len(movies) and float(movies[right_index][1]) == target_rating:
+                right_index += 1
+            
+            # 打印评分相同的所有电影
+            for i in range(left_index, right_index):
+                print(f"{movies[i][0]} - {float(movies[i][1])}")
+                
+            break  # 已找到所有目标评分电影，退出循环
+            
+        elif mid_rating < target_rating:
+            low = mid + 1
+        else:
+            high = mid - 1
+    
+    if not found:
+        print(f"没有找到评分为 {target_rating} 的电影")
 
 def main():
     file_path = 'movies.csv'
     movies = store_movies(file_path)
 
     # search_movies(movies, target_rating=6.0)
-    bubble_sort(movies)
+    movies = bubble_sort(movies)
+    binary_search(movies, target_rating=6.0)
 
 
 if __name__ == "__main__":
