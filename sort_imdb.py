@@ -128,12 +128,66 @@ def binary_search(movies, target_rating=6.0):
     if not found:
         print(f"没有找到评分为 {target_rating} 的电影")
 
+
+def merge(left, right):
+    """
+    合并两个已排序的子列表。
+    """
+    merged = []
+    i = j = 0
+    
+    while i < len(left) and j < len(right):
+        if float(left[i][1]) <= float(right[j][1]):
+            merged.append(left[i])
+            i += 1
+        else:
+            merged.append(right[j])
+            j += 1
+    
+    # 添加剩余元素
+    while i < len(left):
+        merged.append(left[i])
+        i += 1
+    while j < len(right):
+        merged.append(right[j])
+        j += 1
+    
+    return merged
+
+
+def merge_sort(movies):
+    """
+    (五) 归并排序
+    通过组合冒泡排序和二叉搜索算法，您可以在很大程度上加快搜索速度，但使用冒泡排序对输入数据进行排序仍然需要很多时间。
+    在此阶段，您将通过实施归并排序来进一步降低总时间复杂度。排序后，像上一阶段一样实现二分搜索。
+
+    您的程序应执行以下操作：
+    1. 取未排序的数据，将集合分为两部分;
+    2. 使用合并排序算法对左侧部分进行排序。将子部分进一步划分为相等的部分，直到只剩下一个元素并合并它们;
+    3. 使用 merge sort 算法对正确的部分进行排序。将子部分进一步划分为相等的部分，直到只剩下一个元素并合并它们;
+    4. 通过比较元素 （ratings） 来合并生成的 left 和 right 集合，并形成一个排序的集合;
+    5. 对集合进行排序后，应用二进制搜索并打印评级为 6 的电影标题。
+
+    示例 1：
+    Hercules - 6.0
+    The Fast and the Furious: Tokyo Drift - 6.0
+    Finding You - 6.0
+    """
+    if len(movies) <= 1:
+        return movies
+    
+    mid = len(movies) // 2
+    left_half = merge_sort(movies[:mid])
+    right_half = merge_sort(movies[mid:])
+    
+    return merge(left_half, right_half)
+
 def main():
     file_path = 'movies.csv'
     movies = store_movies(file_path)
 
     # search_movies(movies, target_rating=6.0)
-    movies = bubble_sort(movies)
+    movies = merge_sort(movies)
     binary_search(movies, target_rating=6.0)
 
 
